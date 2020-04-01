@@ -8,11 +8,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AllAlbumsDTO {
+public class AllPhotosDTO {
 
-    public Integer userId;
+    public Integer albumId;
 
     public Integer id;
 
     public String title;
+
+    public String url;
+
+    public String thumbnailUrl;
 }

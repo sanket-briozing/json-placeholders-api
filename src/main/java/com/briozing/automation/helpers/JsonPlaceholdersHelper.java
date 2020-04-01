@@ -32,6 +32,14 @@ public class JsonPlaceholdersHelper {
         return response;
     }
 
+    public Response getPostByUserId(String userId,int status) {
+        final Response response = given(requestSpecification)
+                .queryParam("userId",userId)
+                .get("/posts");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
     public Response getAllComments(int status) {
         final Response response = given(requestSpecification)
                 .get("/comments");
@@ -39,9 +47,38 @@ public class JsonPlaceholdersHelper {
         return response;
     }
 
+    public Response getCommentsByPostId(String postId,int status) {
+        final Response response = given(requestSpecification)
+                .pathParam("postId", postId)
+                .get("/posts/{postId}/comments");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
     public Response getAllAlbums(int status) {
         final Response response = given(requestSpecification)
                 .get("/albums");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response getAllPhotos(int status) {
+        final Response response = given(requestSpecification)
+                .get("/photos");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response getAllTodos(int status) {
+        final Response response = given(requestSpecification)
+                .get("/todos");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response getAllUsers(int status) {
+        final Response response = given(requestSpecification)
+                .get("/users");
         response.then().assertThat().statusCode(status);
         return response;
     }

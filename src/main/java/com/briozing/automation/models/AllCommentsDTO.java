@@ -19,5 +19,4 @@ public class AllCommentsDTO {
     public String email;
 
     public String body;
-
 }

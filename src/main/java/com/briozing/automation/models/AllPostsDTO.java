@@ -17,5 +17,4 @@ public class AllPostsDTO {
     public String title;
 
     public String body;
-
 }

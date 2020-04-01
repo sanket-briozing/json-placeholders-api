@@ -8,11 +8,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AllAlbumsDTO {
-
-    public Integer userId;
+public class AllUsersDTO {
 
     public Integer id;
 
-    public String title;
+    public String name;
+
+    public String username;
+
+    public String email;
+
+    public Address address;
+
+    public String phone;
+
+    public String website;
+
+    public Company company;
 }

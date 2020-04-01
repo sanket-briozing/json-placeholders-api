@@ -8,11 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AllAlbumsDTO {
+public class Geo {
 
-    public Integer userId;
+    public String lat;
 
-    public Integer id;
-
-    public String title;
+    public String lng;
 }

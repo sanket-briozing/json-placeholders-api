@@ -8,11 +8,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AllAlbumsDTO {
+public class AllTodosDTO {
 
     public Integer userId;
 
     public Integer id;
 
     public String title;
+
+    public Boolean completed;
 }

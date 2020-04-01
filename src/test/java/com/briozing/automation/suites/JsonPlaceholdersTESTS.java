@@ -37,6 +37,22 @@ public class JsonPlaceholdersTESTS {
         };
     }
 
+    @DataProvider(name = "post-userId-dp")
+    public Object[][] postUserIdDP() {
+
+        return new Object[][]{
+                {"1"}
+        };
+    }
+
+    @DataProvider(name = "comment-postid-dp")
+    public Object[][] commentPostIdDP() {
+
+        return new Object[][]{
+                {"1"}
+        };
+    }
+
     @Test(groups = {"smoke","getallposts"})
     public void verify_get_all_posts() {
         try {
@@ -53,8 +69,8 @@ public class JsonPlaceholdersTESTS {
         }
     }
 
-    @Test(groups = {"smoke","getpost"},dataProvider = "post-id-dp")
-    public void verify_get_post_by_id_(String id) {
+    @Test(groups = {"smoke","getpostbyid"},dataProvider = "post-id-dp")
+    public void verify_get_post_by_id(String id) {
         try {
             logger.info("-------------Test Started ------------");
             final Map<String, Boolean> testSteps = new HashMap<>();
@@ -66,6 +82,22 @@ public class JsonPlaceholdersTESTS {
             ex.printStackTrace();
             logger.info(ex);
             AppAssert.assertTrue(false, "Failure getting posts by id");
+        }
+    }
+
+    @Test(groups = {"smoke","getpostbyuserid"},dataProvider = "post-userId-dp")
+    public void verify_get_post_by_userid(String userId) {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_GET_POST_BY_USERID.name(), true);
+            validateGetPostByUserId(testSteps, userId);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure getting posts by userid");
         }
     }
 
@@ -85,6 +117,22 @@ public class JsonPlaceholdersTESTS {
         }
     }
 
+    @Test(groups = {"smoke","getcommentsbypostid"},dataProvider = "comment-postid-dp")
+    public void verify_get_comments_by_post_id(String postId) {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_GET_COMMENTS_BY_POST_ID.name(), true);
+            validateGetCommentsByPostId(testSteps, postId);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure getting comments by postid");
+        }
+    }
+
     @Test(groups = {"smoke","getallalbums"})
     public void verify_get_all_albums() {
         try {
@@ -98,6 +146,54 @@ public class JsonPlaceholdersTESTS {
             ex.printStackTrace();
             logger.info(ex);
             AppAssert.assertTrue(false, "Failure getting all albums");
+        }
+    }
+
+    @Test(groups = {"smoke","getallphotos"})
+    public void verify_get_all_photos() {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_GET_ALL_PHOTOS.name(), true);
+            validateGetAllPhotos(testSteps);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure getting all photos");
+        }
+    }
+
+    @Test(groups = {"smoke","getalltodos"})
+    public void verify_get_all_todos() {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_GET_ALL_TODOS.name(), true);
+            validateGetAllTodos(testSteps);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure getting all Todos");
+        }
+    }
+
+    @Test(groups = {"smoke","getallusers"})
+    public void verify_get_all_users() {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_GET_ALL_USERS.name(), true);
+            validateGetAllUsers(testSteps);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure getting all Users");
         }
     }
 
@@ -119,6 +215,15 @@ public class JsonPlaceholdersTESTS {
         }
     }
 
+    private void validateGetPostByUserId(Map<String, Boolean> testSteps, String userId) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_GET_POST_BY_USERID.name()) && testSteps.get(TestSteps.STEP_GET_POST_BY_USERID.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_GET_POST_BY_USERID.name());
+            final AllPostsDTO[] response = jsonPlaceholdersHelper.getPostByUserId(userId,200)
+                    .getBody().as(AllPostsDTO[].class);
+            validationHelper.verify_get_post_by_userid(response,userId);
+        }
+    }
+
     private void validateGetAllComments(Map<String, Boolean> testSteps) throws Exception {
         if (null != testSteps.get(TestSteps.STEP_GET_ALL_COMMENTS.name()) && testSteps.get(TestSteps.STEP_GET_ALL_COMMENTS.name())) {
             MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_COMMENTS.name());
@@ -128,12 +233,48 @@ public class JsonPlaceholdersTESTS {
         }
     }
 
+    private void validateGetCommentsByPostId(Map<String, Boolean> testSteps, String postId) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_GET_COMMENTS_BY_POST_ID.name()) && testSteps.get(TestSteps.STEP_GET_COMMENTS_BY_POST_ID.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_GET_COMMENTS_BY_POST_ID.name());
+            final AllCommentsDTO[] response = jsonPlaceholdersHelper.getCommentsByPostId(postId,200)
+                    .getBody().as(AllCommentsDTO[].class);
+            validationHelper.verify_get_comments_by_post_id(response,postId);
+        }
+    }
+
     private void validateGetAllAlbums(Map<String, Boolean> testSteps) throws Exception {
         if (null != testSteps.get(TestSteps.STEP_GET_ALL_ALBUMS.name()) && testSteps.get(TestSteps.STEP_GET_ALL_ALBUMS.name())) {
             MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_ALBUMS.name());
             final AllAlbumsDTO[] response = jsonPlaceholdersHelper.getAllAlbums(200)
                     .getBody().as(AllAlbumsDTO[].class);
             validationHelper.verify_get_all_albums(response);
+        }
+    }
+
+    private void validateGetAllPhotos(Map<String, Boolean> testSteps) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_GET_ALL_PHOTOS.name()) && testSteps.get(TestSteps.STEP_GET_ALL_PHOTOS.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_PHOTOS.name());
+            final AllPhotosDTO[] response = jsonPlaceholdersHelper.getAllPhotos(200)
+                    .getBody().as(AllPhotosDTO[].class);
+            validationHelper.verify_get_all_photos(response);
+        }
+    }
+
+    private void validateGetAllTodos(Map<String, Boolean> testSteps) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_GET_ALL_TODOS.name()) && testSteps.get(TestSteps.STEP_GET_ALL_TODOS.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_TODOS.name());
+            final AllTodosDTO[] response = jsonPlaceholdersHelper.getAllTodos(200)
+                    .getBody().as(AllTodosDTO[].class);
+            validationHelper.verify_get_all_todos(response);
+        }
+    }
+
+    private void validateGetAllUsers(Map<String, Boolean> testSteps) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_GET_ALL_USERS.name()) && testSteps.get(TestSteps.STEP_GET_ALL_USERS.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_USERS.name());
+            final AllUsersDTO[] response = jsonPlaceholdersHelper.getAllUsers(200)
+                    .getBody().as(AllUsersDTO[].class);
+            validationHelper.verify_get_all_users(response);
         }
     }
 }
