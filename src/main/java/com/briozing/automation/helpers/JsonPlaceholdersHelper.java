@@ -1,6 +1,8 @@
 package com.briozing.automation.helpers;
 
 import com.briozing.automation.common.Configuration;
+import com.briozing.automation.models.CreatePostDTO;
+import com.briozing.automation.models.UpdateTitleDTO;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -79,6 +81,43 @@ public class JsonPlaceholdersHelper {
     public Response getAllUsers(int status) {
         final Response response = given(requestSpecification)
                 .get("/users");
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response createPost(CreatePostDTO createPostDTO, int status) {
+        final Response response = given(requestSpecification)
+                .body(createPostDTO)
+                .post("/posts");
+        response.prettyPrint();
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response updatePost(CreatePostDTO createPostDTO,String id, int status) {
+        final Response response = given(requestSpecification)
+                .pathParam("id", id)
+                .body(createPostDTO)
+                .put("/posts/{id}");
+        response.prettyPrint();
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response updateTitle(UpdateTitleDTO updateTitleDTO, String id, int status) {
+        final Response response = given(requestSpecification)
+                .pathParam("id", id)
+                .body(updateTitleDTO)
+                .put("/posts/{id}");
+        response.prettyPrint();
+        response.then().assertThat().statusCode(status);
+        return response;
+    }
+
+    public Response deletePost(String id, int status) {
+        final Response response = given(requestSpecification)
+                .pathParam("id", id)
+                .delete("/posts/{id}");
         response.then().assertThat().statusCode(status);
         return response;
     }

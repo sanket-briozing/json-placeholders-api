@@ -116,6 +116,25 @@ public class TestValidationHelper {
             AppAssert.assertTrue(user.getId() != null, "Id is not null");
         }
     }
+
+    public void verify_create_post(AllPostsDTO actualResponse, CreatePostDTO createPostDTO) {
+        AppAssert.assertEqual(actualResponse.getId().toString(),"101","Id is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getUserId(),createPostDTO.getUserId(),"UserId is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getTitle(),createPostDTO.getTitle(),"Title is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getBody(),createPostDTO.getBody(),"Body is matched with expected data");
+    }
+
+    public void verify_update_post(AllPostsDTO actualResponse, CreatePostDTO createPostDTO, String id) {
+        AppAssert.assertEqual(actualResponse.getId().toString(),id,"Id is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getUserId(),createPostDTO.getUserId(),"UserId is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getTitle(),createPostDTO.getTitle(),"Title is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getBody(),createPostDTO.getBody(),"Body is matched with expected data");
+    }
+
+    public void verify_update_title(AllPostsDTO actualResponse, UpdateTitleDTO updateTitleDTO, String id) {
+        AppAssert.assertEqual(actualResponse.getId().toString(),id,"Id is matched with expected data");
+        AppAssert.assertEqual(actualResponse.getTitle(),updateTitleDTO.getTitle(),"Title is matched with expected data");
+    }
 }
 
 

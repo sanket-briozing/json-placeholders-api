@@ -4,13 +4,11 @@ import com.briozing.automation.helpers.JsonPlaceholdersHelper;
 import com.briozing.automation.models.*;
 import com.briozing.automation.utils.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.json.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,6 +48,14 @@ public class JsonPlaceholdersTESTS {
 
         return new Object[][]{
                 {"1"}
+        };
+    }
+
+    @DataProvider(name = "update-post-dp")
+    public Object[][] updatePostDP() {
+
+        return new Object[][]{
+                {"5"}
         };
     }
 
@@ -197,6 +203,79 @@ public class JsonPlaceholdersTESTS {
         }
     }
 
+    @Test(groups = {"smoke","createpost"})
+    public void verify_create_post() {
+        try {
+            FileInputStream fileInputStream= new FileInputStream(new File(System.getProperty("user.dir") + "/" + "src/main/resources/CreatePost.json"));
+            ObjectMapper mapper = new ObjectMapper();
+            CreatePostDTO createPostDTO = mapper.readValue(fileInputStream, CreatePostDTO.class);
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_CREATE_POST.name(), true);
+            validateCreatePost(testSteps, createPostDTO);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure creating post");
+        }
+    }
+
+    @Test(groups = {"smoke","updatepost"}, dataProvider="update-post-dp")
+    public void verify_update_post(String id) {
+        try {
+            FileInputStream fileInputStream= new FileInputStream(new File(System.getProperty("user.dir") + "/" + "src/main/resources/CreatePost.json"));
+            ObjectMapper mapper = new ObjectMapper();
+            CreatePostDTO createPostDTO = mapper.readValue(fileInputStream, CreatePostDTO.class);
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_UPDATE_POST.name(), true);
+            validateUpdatePost(testSteps, createPostDTO,id);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure updating post");
+        }
+    }
+
+    @Test(groups = {"smoke","updatetitle"}, dataProvider="update-post-dp")
+    public void verify_update_title(String id) {
+        try {
+            FileInputStream fileInputStream= new FileInputStream(new File(System.getProperty("user.dir") + "/" + "src/main/resources/PartialUpdate.json"));
+            ObjectMapper mapper = new ObjectMapper();
+            UpdateTitleDTO updateTitleDTO = mapper.readValue(fileInputStream, UpdateTitleDTO.class);
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_UPDATE_TITLE.name(), true);
+            validateUpdateTitle(testSteps, updateTitleDTO ,id);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure updating title");
+        }
+    }
+
+    @Test(groups={"smoke","deletepost"},dataProvider = "post-id-dp")
+    public void verify_delete_post(String id) {
+        try {
+            logger.info("-------------Test Started ------------");
+            final Map<String, Boolean> testSteps = new HashMap<>();
+            testSteps.put(TestSteps.STEP_DELETE_POST.name(),true);
+            validateDeletePost(testSteps ,id);
+            logger.info("--------------Test Ended -------------");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.info(ex);
+            AppAssert.assertTrue(false, "Failure Deleting post");
+        }
+    }
+
     private void validateGetAllPosts(Map<String, Boolean> testSteps) throws Exception {
         if (null != testSteps.get(TestSteps.STEP_GET_ALL_POST.name()) && testSteps.get(TestSteps.STEP_GET_ALL_POST.name())) {
             MainUtils.stepLog(logger, TestSteps.STEP_GET_ALL_POST.name());
@@ -275,6 +354,40 @@ public class JsonPlaceholdersTESTS {
             final AllUsersDTO[] response = jsonPlaceholdersHelper.getAllUsers(200)
                     .getBody().as(AllUsersDTO[].class);
             validationHelper.verify_get_all_users(response);
+        }
+    }
+
+    private void validateCreatePost(Map<String, Boolean> testSteps, CreatePostDTO createPostDTO) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_CREATE_POST.name()) && testSteps.get(TestSteps.STEP_CREATE_POST.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_CREATE_POST.name());
+            final AllPostsDTO response = jsonPlaceholdersHelper.createPost(createPostDTO,201)
+                    .getBody().as(AllPostsDTO.class);
+            validationHelper.verify_create_post(response, createPostDTO);
+        }
+    }
+
+    private void validateUpdatePost(Map<String, Boolean> testSteps, CreatePostDTO createPostDTO, String id) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_UPDATE_POST.name()) && testSteps.get(TestSteps.STEP_UPDATE_POST.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_UPDATE_POST.name());
+            final AllPostsDTO response = jsonPlaceholdersHelper.updatePost(createPostDTO,id,200)
+                    .getBody().as(AllPostsDTO.class);
+            validationHelper.verify_update_post(response, createPostDTO, id);
+        }
+    }
+
+    private void validateUpdateTitle(Map<String, Boolean> testSteps, UpdateTitleDTO updateTitleDTO, String id) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_UPDATE_POST.name()) && testSteps.get(TestSteps.STEP_UPDATE_POST.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_UPDATE_POST.name());
+            final AllPostsDTO response = jsonPlaceholdersHelper.updateTitle(updateTitleDTO,id,200)
+                    .getBody().as(AllPostsDTO.class);
+            validationHelper.verify_update_title(response, updateTitleDTO, id);
+        }
+    }
+
+    private void validateDeletePost(Map<String, Boolean> testSteps, String id) throws Exception {
+        if (null != testSteps.get(TestSteps.STEP_DELETE_POST.name()) && testSteps.get(TestSteps.STEP_DELETE_POST.name())) {
+            MainUtils.stepLog(logger, TestSteps.STEP_DELETE_POST.name());
+            final Response response = jsonPlaceholdersHelper.deletePost(id,200);
         }
     }
 }
